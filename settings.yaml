@@ -9,12 +9,12 @@ models:
     type: openai_chat # or azure_openai_chat
     # api_base: https://<instance>.openai.azure.com
     # api_version: 2024-05-01-preview
-    api_base: ${TOGETHER_API_BASE}
+    api_base: ${OLLAMA_API_BASE}
     auth_type: api_key # or azure_managed_identity
-    api_key: ${TOGETHER_API_KEY} # set this in the generated .env file
+    api_key: ${OLLAMA_API_EKY} # set this in the generated .env file
     # audience: "https://cognitiveservices.azure.com/.default"
     # organization: <organization_id>
-    model: ${TOGETHER_LLM_MODEL}
+    model: ${OLLAMA_LLM_MODEL}
     # deployment_name: <azure_model_deployment_name>
     encoding_model: cl100k_base # automatically set by tiktoken if left undefined
     model_supports_json: true # recommended if this is available for your model.
@@ -28,12 +28,12 @@ models:
     type: openai_embedding # or azure_openai_embedding
     # api_base: https://<instance>.openai.azure.com
     # api_version: 2024-05-01-preview
-    api_base: ${ZHIPUAI_API_BASE}
+    api_base: ${SILICONFLOW_API_BASE}
     auth_type: api_key # or azure_managed_identity
-    api_key: ${ZHIPUAI_API_KEY}
+    api_key: ${SILICONFLOW_API_KEY}
     # audience: "https://cognitiveservices.azure.com/.default"
     # organization: <organization_id>
-    model: ${ZHIPUAI_EMBEDDING_MODEL}
+    model: ${SILICONFLOW_EMBEDDING_MODEL}
     # deployment_name: <azure_model_deployment_name>
     encoding_model: cl100k_base # automatically set by tiktoken if left undefined
     model_supports_json: true # recommended if this is available for your model.

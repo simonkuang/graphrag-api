@@ -60,3 +60,5 @@ docsite/
 # vim swap
 *.swp
 *.swo
+/cache/
+/logs/
