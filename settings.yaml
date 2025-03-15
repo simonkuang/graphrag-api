@@ -9,12 +9,12 @@ models:
     type: openai_chat # or azure_openai_chat
     # api_base: https://<instance>.openai.azure.com
     # api_version: 2024-05-01-preview
-    api_base: ${OLLAMA_API_BASE}
+    api_base: ${OPENROUTER_API_BASE}
     auth_type: api_key # or azure_managed_identity
-    api_key: ${OLLAMA_API_EKY} # set this in the generated .env file
+    api_key: ${OPENROUTER_API_KEY} # set this in the generated .env file
     # audience: "https://cognitiveservices.azure.com/.default"
     # organization: <organization_id>
-    model: ${OLLAMA_LLM_MODEL}
+    model: ${OPENROUTER_LLM_MODEL}
     # deployment_name: <azure_model_deployment_name>
     encoding_model: cl100k_base # automatically set by tiktoken if left undefined
     model_supports_json: true # recommended if this is available for your model.
@@ -94,7 +94,7 @@ extract_graph:
 summarize_descriptions:
   model_id: default_chat_model
   prompt: "prompts/summarize_descriptions.txt"
-  max_length: 500
+  max_length: 1024
 
 extract_graph_nlp:
   text_analyzer:
@@ -112,7 +112,7 @@ community_reports:
   graph_prompt: "prompts/community_report_graph.txt"
   text_prompt: "prompts/community_report_text.txt"
   max_length: 4096
-  max_input_length: 8000
+  max_input_length: 8192
 
 cluster_graph:
   max_cluster_size: 10
