@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>医疗大客户销售定制 Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 新增marked库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 新增DOMPurify安全过滤 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-header">
+            <h1>医疗大客户销售 Chat</h1>
+            <select id="methodSelect">
+                <option value="global">Global Method</option>
+                <option value="local">Local Method</option>
+            </select>
+        </div>
+        
+        <div class="chat-box" id="chatBox"></div>
+        
+        <div class="input-area">
+            <textarea id="messageInput" placeholder="请输入您的问题..."></textarea>
+            <button onclick="sendMessage()">发送</button>
+        </div>
+    </div>
+
+    <script>
+        let chatHistory = [];
+        
+	function appendMessage(content, isUser) {
+            const chatBox = document.getElementById('chatBox');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+        
+            // 使用marked解析Markdown，并使用DOMPurify消毒
+            const parsedContent = DOMPurify.sanitize(marked.parse(content));
+            messageDiv.innerHTML = parsedContent;
+        
+            // 为代码块添加样式
+            const codeBlocks = messageDiv.querySelectorAll('code');
+            codeBlocks.forEach(code => {
+                if (code.parentElement.tagName !== 'PRE') {
+                    code.style.background = '#f3f3f3';
+                    code.style.padding = '2px 4px';
+                    code.style.borderRadius = '4px';
+                }
+            });
+        
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            const method = document.getElementById('methodSelect').value;
+            
+            if (!message) return;
+            
+            // 添加用户消息
+            appendMessage(message, true);
+            chatHistory.push({content: message, is_user: true});
+            
+            // 禁用输入
+            input.value = '';
+            input.disabled = true;
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'message': message,
+                        'method': method,
+                        'history': JSON.stringify(chatHistory)
+                    })
+                });
+                
+                const data = await response.json();
+                appendMessage(data.response, false);
+                chatHistory.push({content: data.response, is_user: false});
+            } catch (error) {
+                appendMessage(`请求失败: ${error}`, false);
+            } finally {
+                input.disabled = false;
+            }
+        }
+
+        // 支持回车发送
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
+
